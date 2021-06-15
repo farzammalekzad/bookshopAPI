@@ -17,6 +17,10 @@ const sliderSchema = new mongoose.Schema({
     link: {
         type: String,
         required: false
+    },
+    status: {
+        type: Boolean,
+        default: true
     }
 });
 
