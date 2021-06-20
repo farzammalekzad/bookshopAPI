@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 
 const connectDb = require('./config/db');
+const {errorHandler} = require('./middlewares/errorcontroller');
 
 
 const app = express();
@@ -27,6 +28,10 @@ app.use(express.static(path.join(__dirname,'public')));
 
 //Routing
 app.use('/slider', require('./routes/slider'));
+app.use('/user', require('./routes/userroutes'));
+
+//Error Handling
+app.use(errorHandler);
 
 
 app.listen(3000, () => {

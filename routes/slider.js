@@ -15,13 +15,19 @@ routes.post('/', (req, res, next) => {
                     res.setHeader('Content-Type', 'application/json');
                     res.json(sliders)
                 }).catch((err) => {
-                console.log(err);
+                next(err);
             });
         }).catch((err) => {
-        console.log(err);
-        res.statusCode = 403;
-        res.setHeader('Content-Type', 'application/json');
-        res.json({message: 'داده های ورودی مجددا بررسی و ارسال شود', status: 'failed'});
+            let errArr = [];
+            err.errors.forEach((e) => {
+                errArr.push({
+                    message: e
+                });
+            });
+            const error = new Error('خطا در اعتبارسنجی');
+            error.data = errArr;
+            error.statusCode = 403;
+            next(error);
     });
 
 });
@@ -30,11 +36,16 @@ routes.post('/', (req, res, next) => {
 routes.get('/', (req, res, next) => {
     Slider.find()
         .then((sliders) => {
+            if (!sliders) {
+                const error = new Error('اسلایدری یافت نشد');
+                error.statusCode = 404;
+                throw error;
+            }
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.json(sliders);
         }).catch((err) => {
-            console.log(err);
+            next(err);
     });
 });
 
@@ -46,11 +57,9 @@ routes.delete('/', (req, res, next) => {
             res.setHeader('Content-Type', 'application/json');
             res.json({message: 'کلیه اطلاعات مربوط به اسلایدرها حذف شد', status: 'success'});
         }).catch((err) => {
-            console.log(err);
+            next(err);
     })
 });
-
-
 
 
 module.exports = routes;
