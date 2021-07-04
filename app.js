@@ -29,6 +29,7 @@ app.use(express.static(path.join(__dirname,'public')));
 //Routing
 app.use('/slider', require('./routes/slider'));
 app.use('/user', require('./routes/userroutes'));
+app.use('/academic', require('./routes/academic'));
 
 //Error Handling
 app.use(errorHandler);
