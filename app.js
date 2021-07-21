@@ -30,6 +30,7 @@ app.use(express.static(path.join(__dirname,'public')));
 app.use('/slider', require('./routes/slider'));
 app.use('/user', require('./routes/userroutes'));
 app.use('/academic', require('./routes/academic'));
+app.use('/upload', require('./routes/imageRoute'));
 
 //Error Handling
 app.use(errorHandler);

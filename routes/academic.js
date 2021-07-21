@@ -35,7 +35,8 @@ routes.route('/category')
         }
     });
 
-routes.route('/:cId/books')
+
+routes.route('/category/:cId')
     .get(async (req, res, next) => {
         try {
             const academics = await Academic.findById(req.params.cId)
@@ -73,12 +74,48 @@ routes.route('/:cId/books')
         }
     })
     .put(async (req, res, next) => {
-    res.statusCode = 403;
-    res.end('مجوز این عملیات وجود ندارد');
+        try {
+            const academics = await Academic.findById(req.params.cId);
+            if (academics != null) {
+                if (req.body.field) {
+                    academics.field = req.body.field;
+                }
+                if (req.body.imageUrl) {
+                    academics.imageUrl = req.body.imageUrl;
+                }
+                if (req.body.description) {
+                    academics.description = req.body.description;
+                }
+                await academics.save();
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json({message: 'بروزرسانی با موفقیت انجام پذیرفت', status: 'success'});
+            } else {
+                const error = new Error('دسته انتخابی صحیح نمی باشد');
+                error.statusCode = 404;
+                throw error;
+            }
+        } catch (err) {
+            next(err);
+        }
     })
     .delete(async (req, res, next) => {
-        res.statusCode = 403;
-        res.end('مجوز این عملیات وجود ندارد');
+        try {
+            const academics = await Academic.findById(req.params.cId);
+            if (academics != null) {
+                academics.remove();
+                await academics.save();
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json({message: 'حذف با موفقیت انجام پذیرفت', status: 'success'});
+            } else {
+                const error = new Error('دسته انتخابی صحیح نمی باشد');
+                error.statusCode = 404;
+                throw error;
+            }
+        } catch (err) {
+            next(err)
+        }
     });
 
 routes.route('/:cId/books/:bookId')
