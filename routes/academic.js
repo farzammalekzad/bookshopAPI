@@ -2,7 +2,7 @@ const express = require('express');
 
 const Academic = require('../model/academic.model');
 const checkCategoryinfo = require('../security/checkCategoryinfo');
-
+const {authenticate} = require('../middlewares/auth');
 const routes = express.Router();
 
 //set main.html handler for category of books
@@ -23,7 +23,8 @@ routes.route('/category')
             next(err);
         }
     })
-    .post(async (req, res, next) => {
+    //set new Category in DATABASE
+    .post(authenticate, async (req, res, next) => {
         try {
           await checkCategoryinfo.validate(req.body);
           await Academic.create(req.body);
@@ -33,7 +34,13 @@ routes.route('/category')
         } catch (err) {
             next(err);
         }
-    });
+    })
+    //edit Category in Database
+    .put(async (req, res, next) => {
+        res.json('under construction');
+    })
+    //delete Category in DATABASE
+
 
 
 routes.route('/category/:cId')
@@ -53,7 +60,10 @@ routes.route('/category/:cId')
             next(err);
         }
     })
-    .post(async (req, res, next) => {
+
+    //ezafe kardane ketab
+
+    .post(authenticate, async (req, res, next) => {
         try {
             const academics = await Academic.findById(req.params.cId);
             if (academics != null) {
@@ -73,7 +83,7 @@ routes.route('/category/:cId')
 
         }
     })
-    .put(async (req, res, next) => {
+    .put(authenticate, async (req, res, next) => {
         try {
             const academics = await Academic.findById(req.params.cId);
             if (academics != null) {
@@ -99,11 +109,11 @@ routes.route('/category/:cId')
             next(err);
         }
     })
-    .delete(async (req, res, next) => {
+    .delete(authenticate, async (req, res, next) => {
         try {
             const academics = await Academic.findById(req.params.cId);
             if (academics != null) {
-                academics.remove();
+                await academics.remove();
                 await academics.save();
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -144,7 +154,7 @@ routes.route('/:cId/books/:bookId')
         res.statusCode = 403;
         res.end('مجوز این عملیات وجود ندارد');
     })
-    .put(async (req, res, next) => {
+    .put(authenticate, async (req, res, next) => {
         try {
             const academics = await Academic.findById(req.params.cId);
             if (academics != null && academics.books.id(req.params.bookId) != null) {
@@ -183,7 +193,7 @@ routes.route('/:cId/books/:bookId')
             next(err);
         }
     })
-    .delete(async (req, res, next) => {
+    .delete(authenticate, async (req, res, next) => {
         try {
             const academics = await Academic.findById(req.params.cId);
             if (academics != null && academics.books.id(req.params.bookId) != null) {

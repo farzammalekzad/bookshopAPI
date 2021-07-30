@@ -7,6 +7,7 @@ const cors = require('cors');
 
 const connectDb = require('./config/db');
 const {errorHandler} = require('./middlewares/errorcontroller');
+const {authenticate} = require('./middlewares/auth');
 
 
 const app = express();

@@ -55,7 +55,7 @@ routes.route('/login')
                     expiresIn: "1h"
                 });
                 res.statusCode = 200;
-                res.json({message: 'ورود با موفقیت انجام شد', token, name: user.name})
+                res.json({status: 'success', message: 'ورود با موفقیت انجام شد', token, name: user.name})
             } else {
                 const error = new Error('نام کاربری یا رمز عبور صحیح نمی باشد');
                 error.statusCode = 401;
