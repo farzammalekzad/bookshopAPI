@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 exports.authenticate = (req, res, next) => {
-    const authHeader = req.get('Authentication');
+    const authHeader = req.get('Authorization');
     try {
         if (!authHeader) {
             const error = new Error('شما مجوز ندارید');
