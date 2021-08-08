@@ -30,7 +30,7 @@ routes.route('/category')
           await Academic.create(req.body);
           res.statusCode = 200;
           res.setHeader('Content-Type', 'application/json');
-          res.json({message: 'موارد با موفقیت در بانک اطلاعاتی ذخیره شد'});
+          res.json({message: 'موارد با موفقیت در بانک اطلاعاتی ذخیره شد', status: 'success'});
         } catch (err) {
             next(err);
         }
@@ -68,10 +68,12 @@ routes.route('/category/:cId')
             const academics = await Academic.findById(req.params.cId);
             if (academics != null) {
                 academics.books.push(req.body);
+                const length = academics.books.length;
+                const book = academics.books[length - 1];
                 await academics.save();
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.json({message: 'کتاب با موفقیت ذخیره شد'});
+                res.json({message: 'کتاب با موفقیت ذخیره شد', status: 'success', book: book});
             } else {
                 const error = new Error('دسته انتخابی صحیح نمی باشد');
                 error.statusCode = 404;
@@ -155,6 +157,7 @@ routes.route('/:cId/books/:bookId')
         res.end('مجوز این عملیات وجود ندارد');
     })
     .put(authenticate, async (req, res, next) => {
+
         try {
             const academics = await Academic.findById(req.params.cId);
             if (academics != null && academics.books.id(req.params.bookId) != null) {

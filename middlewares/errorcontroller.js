@@ -3,5 +3,5 @@ exports.errorHandler = (err, req, res, next ) => {
     const message = err.message;
     const data = err.data;
     res.statusCode = status;
-    res.json({message, data});
+    res.json({message, data, status});
 };

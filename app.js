@@ -32,6 +32,7 @@ app.use('/slider', require('./routes/slider'));
 app.use('/user', require('./routes/userroutes'));
 app.use('/academic', require('./routes/academic'));
 app.use('/upload', require('./routes/imageRoute'));
+app.use('/request', require('./routes/request'));
 
 //Error Handling
 app.use(errorHandler);
