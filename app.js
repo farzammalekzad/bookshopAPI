@@ -33,6 +33,7 @@ app.use('/user', require('./routes/userroutes'));
 app.use('/academic', require('./routes/academic'));
 app.use('/upload', require('./routes/imageRoute'));
 app.use('/request', require('./routes/request'));
+app.use('/search', require('./routes/search'));
 
 //Error Handling
 app.use(errorHandler);
