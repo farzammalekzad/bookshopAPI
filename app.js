@@ -34,6 +34,7 @@ app.use('/academic', require('./routes/academic'));
 app.use('/upload', require('./routes/imageRoute'));
 app.use('/request', require('./routes/request'));
 app.use('/search', require('./routes/search'));
+app.use('/apps', require('./routes/appsRoute'));
 
 //Error Handling
 app.use(errorHandler);
