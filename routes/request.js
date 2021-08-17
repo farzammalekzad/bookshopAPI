@@ -32,6 +32,35 @@ routes.post('/', async (req, res, next) => {
 
 });
 
+routes.get('/:requestId', async (req, res, next) => {
+    try {
+        const request = await Request.findById(req.params.requestId);
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(request);
+    } catch (err) {
+        next(err);
+    }
+});
+
+
+routes.put('/:requestId', async (req, res, next) => {
+    try {
+        const request = await Request.findById(req.params.requestId);
+        if (request != null) {
+            if (req.body.status) {
+                request.status = req.body.status
+            }
+            await request.save();
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json({message: 'درخواست بروز شد', status: 'success'})
+        }
+    } catch (err) {
+        next(err);
+    }
+})
+
 
 
 module.exports = routes;

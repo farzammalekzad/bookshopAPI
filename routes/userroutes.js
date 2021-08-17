@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../model/usermodel');
 const checkUser = require('../security/checkregisterinfo');
 const sendEmail = require('../utils/mail');
+const {authenticate} = require("../middlewares/auth");
 
 const routes = express.Router();
 
@@ -124,5 +125,26 @@ routes.route('/reset-password/:token')
         }
     });
 
+routes.get('/checkToken', async (req, res, next) => {
+    const authHeader = req.get('Authorization');
+    try {
+        if (!authHeader) {
+            const error = new Error('شما مجوز ندارید');
+            error.statusCode = 401;
+            throw error;
+        }
+        const token = authHeader.split(' ')[1];
+        const decodedToken = jwt.verify(token, 'SECRET');
+        if (!decodedToken) {
+            const error = new Error('شما مجوز ندارید');
+            error.statusCode = 401;
+            throw error;
+        }
+        let checkedUser = decodedToken.user;
+        res.json({message: 'توکن معتبر می‌باشد', status: 'success', token, name: checkedUser.name});
+    } catch (err) {
+        res.json({message: 'توکن معتبر نیست', status: 'failed'});
+    }
+});
 
 module.exports = routes;
