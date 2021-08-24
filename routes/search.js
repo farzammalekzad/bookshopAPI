@@ -7,12 +7,14 @@ const routes = express.Router();
 
 
 
+
+
 // @desc: search title
 routes.post('/search',  async (req, res, next) => {
     const options = {
         mirror: 'http://gen.lib.rus.ec',
         query: req.body.title,
-        count: 50,
+        count: req.body.num,
         search_in: 'title',
         sort_by: 'year',
         reverse: true
@@ -31,9 +33,11 @@ routes.post('/search',  async (req, res, next) => {
                 year: data[n].year,
                 language: data[n].language,
                 pages: data[n].pagesinfile,
+                publisher: data[n].publisher,
                 size: data[n].filesize,
+                extension: data[n].extension,
                 cover: data[n].coverurl,
-                directlink: `${dlUrl}/${Math.floor(data[n].id / 1000) * 1000}/${data[n].md5.toLowerCase()}/${data[n].author} - ${data[n].title}-${data[n].publisher} (${data[n].year}).${data[n].extension}`
+                directlink: encodeURI(`${dlUrl}/${Math.floor(data[n].id / 1000) * 1000}/${data[n].md5.toLowerCase()}/${data[n].author} - ${data[n].title}-${data[n].publisher} (${data[n].year}).${data[n].extension}`)
             }
             finalData.push(x);
         }
